@@ -38,7 +38,7 @@ Follow these steps to train and test the system:
    ```bash
    npm run build
    ```
-5. Start the production server:
+5. Start the server:
    ```bash
    npm start
    ```
