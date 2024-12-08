@@ -1,0 +1,276 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model questions {
+  question_id                  Int                            @id @default(autoincrement())
+  section_id                   Int?
+  text                         String
+  choice_a                     String?
+  choice_b                     String?
+  choice_c                     String?
+  choice_d                     String?
+  difficulty_level             Int
+  correct_answer               String
+  exam_id                      Int?
+  category_id                  Int
+  sub_category_id              Int
+  remarks                      String?
+  passage                      String?
+  question_order               Int?
+  choice_a_image               String?
+  choice_b_image               String?
+  choice_c_image               String?
+  choice_d_image               String?
+  correct_answer_image         String?
+  previous_question_id         Int?
+  is_archived                  Boolean?                       @default(false)
+  exam_type                    exam_type?                     @default(dsat)
+  exam_attempt_questions       exam_attempt_questions[]
+  missed_and_flagged_questions missed_and_flagged_questions[]
+  practice_attempt_questions   practice_attempt_questions[]
+  question_tags                question_tags[]
+  exams                        exams?                         @relation(fields: [exam_id], references: [exam_id])
+  sections                     sections?                      @relation(fields: [section_id], references: [section_id], onDelete: NoAction, onUpdate: NoAction)
+  sub_categories               sub_categories                 @relation(fields: [sub_category_id], references: [sub_category_id])
+
+  @@index([category_id])
+  @@index([sub_category_id])
+}
+
+model categories {
+  category_id         Int                   @id @default(autoincrement())
+  name                String
+  exam_type           exam_type?            @default(dsat)
+  fullName            String?
+  sub_categories      sub_categories[]
+}
+
+model sub_categories {
+  sub_category_id Int         @id @default(autoincrement())
+  name            String
+  category_id     Int
+  fullName        String
+  exam_type       exam_type?  @default(dsat)
+  questions       questions[]
+  categories      categories  @relation(fields: [category_id], references: [category_id], onDelete: NoAction, onUpdate: NoAction)
+  tags            tags[]
+}
+
+model tags {
+  tag_id                Int                     @id @default(autoincrement())
+  name                  String
+  sub_category_id       Int
+  exam_type             exam_type?              @default(dsat)
+  question_tags         question_tags[]
+  sub_categories        sub_categories          @relation(fields: [sub_category_id], references: [sub_category_id], onDelete: NoAction, onUpdate: NoAction)
+  practice_attempt_tags practice_attempt_tags[]
+}
+
+model question_tags {
+  question_id Int
+  tag_id      Int
+  questions   questions @relation(fields: [question_id], references: [question_id], onDelete: NoAction, onUpdate: NoAction)
+  tags        tags      @relation(fields: [tag_id], references: [tag_id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([question_id, tag_id])
+  @@index([question_id, tag_id])
+}
+
+model exams {
+  exam_id                      Int                            @id @default(autoincrement())
+  name                         String                         @db.VarChar(100)
+  completed                    Boolean                        @default(false)
+  is_archived                  Boolean                        @default(false)
+  exam_type                    exam_type                      @default(dsat)
+  exam_attempts                exam_attempts[]
+  missed_and_flagged_questions missed_and_flagged_questions[]
+  questions                    questions[]
+}
+
+model exam_config {
+  config_id Int       @id @default(autoincrement())
+  exam_type exam_type @default(dsat)
+  config    Json
+}
+
+model exam_attempts {
+  attempt_id             Int                      @id @default(autoincrement())
+  user_id                String                   @db.VarChar(80)
+  exam_id                Int
+  start_time             DateTime                 @default(now()) @db.Timestamptz(6)
+  end_time               DateTime?                @db.Timestamptz(6)
+  status                 String                   @default("in_progress") @db.VarChar(20)
+  current_section_id     Int?
+  current_question_id    Int?
+  is_real                Boolean                  @default(true)
+  math_score             Int?
+  reading_writing_score  Int?
+  total_score            Int?
+  is_reviewed            Boolean                  @default(false)
+  is_long                Boolean                  @default(false)
+  exclude_from_analytics Boolean                  @default(false)
+  scores                 String?
+  exam_attempt_questions exam_attempt_questions[]
+  exam_attempt_sections  exam_attempt_sections[]
+  exams                  exams                    @relation(fields: [exam_id], references: [exam_id], onDelete: NoAction, onUpdate: NoAction)
+  users                  users                    @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id])
+  @@index([status])
+}
+
+model exam_attempt_sections {
+  attempt_section_id        Int           @id @default(autoincrement())
+  attempt_id                Int
+  section_id                Int
+  current_section_time_left Int?
+  total_questions           Int?
+  section_order             Int?
+  time_left_on_complete     Int?
+  exam_attempts             exam_attempts @relation(fields: [attempt_id], references: [attempt_id], onDelete: Cascade, onUpdate: NoAction)
+  sections                  sections      @relation(fields: [section_id], references: [section_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model exam_attempt_questions {
+  attempt_question_id Int           @id @default(autoincrement())
+  attempt_id          Int
+  question_id         Int
+  is_answered         Boolean       @default(false)
+  is_correct          Boolean       @default(false)
+  user_answer         String?       @db.VarChar(80)
+  marked_for_review   Boolean       @default(false)
+  section_id          Int
+  question_number     Int
+  time_stamp          Int?
+  exam_attempts       exam_attempts @relation(fields: [attempt_id], references: [attempt_id], onDelete: Cascade, onUpdate: NoAction)
+  question            questions     @relation(fields: [question_id], references: [question_id], onDelete: NoAction, onUpdate: NoAction)
+  sections            sections      @relation(fields: [section_id], references: [section_id])
+}
+
+model sections {
+  section_id             Int                       @id @default(autoincrement())
+  name                   String                    @db.VarChar(50)
+  time_limit             Int?
+  difficulty_level       sections_difficulty_level @default(easy)
+  type                   sections_type             @default(rw)
+  exam_type              exam_type                 @default(dsat)
+  total_questions        Int?
+  section_order          Int?
+  exam_attempt_questions exam_attempt_questions[]
+  exam_attempt_sections  exam_attempt_sections[]
+  questions              questions[]
+}
+
+model practice_attempts {
+  attempt_id                 Int                          @id @default(autoincrement())
+  user_id                    String                       @db.VarChar(80)
+  start_time                 DateTime                     @default(now()) @db.Timestamptz(6)
+  end_time                   DateTime?                    @db.Timestamptz(6)
+  status                     String                       @default("in_progress") @db.VarChar(20)
+  score                      Int?
+  exam_type                  exam_type?                   @default(dsat)
+  practice_attempt_questions practice_attempt_questions[]
+  users                      users                        @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+  practice_attempt_tags      practice_attempt_tags[]
+  exclude_from_analytics     Boolean                      @default(false)
+}
+
+model practice_attempt_tags {
+  practice_attempt_id Int
+  tag_id              Int
+  tag_order           Int               @default(1)
+  practice_attempts   practice_attempts @relation(fields: [practice_attempt_id], references: [attempt_id], onDelete: Cascade, onUpdate: NoAction)
+  tags                tags              @relation(fields: [tag_id], references: [tag_id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([practice_attempt_id, tag_id])
+  @@unique([practice_attempt_id, tag_id])
+}
+
+model practice_attempt_questions {
+  question_id                  Int
+  is_answered                  Boolean?          @default(false)
+  is_correct                   Boolean?          @default(false)
+  user_answer                  String?           @db.Char(80)
+  marked_for_review            Boolean?          @default(false)
+  practice_attempt_id          Int
+  practice_attempt_question_id Int               @id @default(autoincrement())
+  question_number              Int
+  tag_id                       Int?
+  practice_attempts            practice_attempts @relation(fields: [practice_attempt_id], references: [attempt_id], onDelete: Cascade, onUpdate: NoAction)
+  questions                    questions         @relation(fields: [question_id], references: [question_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model missed_and_flagged_questions {
+  m_f_question_id Int        @id @default(autoincrement())
+  user_id         String
+  question_id     Int
+  exam_id         Int
+  exam_type       exam_type? @default(dsat)
+  exams           exams      @relation(fields: [exam_id], references: [exam_id], onDelete: NoAction, onUpdate: NoAction)
+  questions       questions  @relation(fields: [question_id], references: [question_id], onDelete: NoAction, onUpdate: NoAction)
+  users           users      @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([user_id, question_id, exam_id])
+}
+
+model users {
+  id                           Int                            @unique @default(autoincrement())
+  user_id                      String                         @id @db.VarChar(80)
+  email                        String                         @unique @db.VarChar(100)
+  name                         String?                        @db.VarChar(50)
+  registration_date            DateTime?                      @default(now()) @db.Timestamptz(6)
+  dream_school                 String?                        @db.VarChar(150)
+  have_taken_ACT               Boolean?                       @default(false)
+  have_taken_SAT               Boolean?                       @default(false)
+  is_onboarded                 Boolean?                       @default(false)
+  math_courses_taken           String[]
+  parent_email                 String?                        @db.VarChar(100)
+  parent_phone_number          String?                        @db.VarChar(30)
+  previous_ACT_score           Int?
+  previous_SAT_RW_score        Int?
+  previous_SAT_math_score      Int?
+  target_exam                  exam_type?
+  target_exam_date             DateTime?
+  state_of_residence           String?                        @db.VarChar(20)
+  student_grade                Int?
+  student_phone_number         String?                        @db.VarChar(30)
+  target_sat_score             Int?
+  target_psat_score            Int?
+  target_school                String[]
+  date_of_birth                DateTime?
+  parent_firstName             String?                        @db.VarChar(50)
+  parent_lastName              String?                        @db.VarChar(50)
+  surname                      String?                        @db.VarChar(100)
+  grade_school                 String?                        @db.VarChar(150)
+  school_id                    Int?
+  country                      String?                        @db.VarChar(100)
+  guidance_counselor_email     String?                        @db.VarChar(100)
+  can_contact_parent           Boolean?                       @default(true)
+  level                        Int                            @default(1)
+  xp                           Int                            @default(0)
+  exam_attempts                exam_attempts[]
+  missed_and_flagged_questions missed_and_flagged_questions[]
+  practice_attempts            practice_attempts[]
+}
+
+enum sections_difficulty_level {
+  easy
+  hard
+}
+
+enum sections_type {
+  rw
+  math
+}
+
+enum exam_type {
+  dsat
+  psat
+}

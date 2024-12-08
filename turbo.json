@@ -1,0 +1,77 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalEnv": [
+    "NODE_ENV",
+    "DATABASE_URL"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": [
+        "^build",
+        "db:migrate",
+        "db:generate"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**"
+      ],
+      "env": [
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_STRIPE_KEY",
+        "STRIPE_API_KEY",
+        "NEXT_PRUBLIC_CART_CANCEL_URL",
+        "NEXT_PUBLIC_CART_SUCCESS_URL",
+        "TEACHWORKS_API_KEY",
+        "UPSTASH_KAFKA_REST_PASSWORD",
+        "UPSTASH_KAFKA_REST_URL",
+        "UPSTASH_KAFKA_REST_USERNAME",
+        "KAFKA_BROKER",
+        "KAFKA_USERNAME",
+        "KAFKA_PASSWORD",
+        "MONGODB_URI",
+        "RESEND_API_KEY",
+        "SENTRY_AUTH_TOKEN",
+        "CLERK_SECRET_KEY",
+        "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
+        "NEXTAUTH_SECRET",
+        "WEBHOOK_SECRET",
+        "NEXT_PUBLIC_BASE_URL",
+        "DIRECT_URL"
+      ]
+    },
+    "db:migrate": {
+      "cache": false
+    },
+    "db:generate": {
+      "cache": false
+    },
+    "db:push": {
+      "cache": false
+    },
+    "ios": {
+      "cache": false
+    },
+    "analytics:seed": {
+      "cache": false
+    },
+    "analytics:migrate": {
+      "cache": false
+    },
+    "check-types": {
+      "dependsOn": [
+        "^check-types"
+      ]
+    },
+    "dev": {
+      "persistent": true,
+      "dependsOn": [
+        "^db:generate"
+      ],
+      "cache": false,
+      "inputs": [
+        ".env"
+      ]
+    }
+  }
+}

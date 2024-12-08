@@ -1,0 +1,19 @@
+{
+  "name": "@wolfietutor/db",
+  "version": "1.0.0",
+  "dependencies": {
+    "@prisma/client": "^5.16.2"
+  },
+  "devDependencies": {
+    "prisma": "^5.16.2",
+    "@types/bun": "latest"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "module": "index.ts",
+  "type": "module",
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

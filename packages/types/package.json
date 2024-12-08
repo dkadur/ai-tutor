@@ -1,0 +1,7 @@
+{
+  "name": "@wolfietutor/types",
+  "dependencies": {
+    "express": "^4.18.1",
+    "@wolfietutor/db": "*"
+  }
+}
