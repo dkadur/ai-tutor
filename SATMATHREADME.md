@@ -22,25 +22,13 @@ The following files have been modified or created for the project inside the `ap
 
 Follow these steps to train and test the system:
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
-2. Run the development server:
-   ```bash
-   npm run dev
-   ```
-3. Test the application:
+Test the application:
    ```bash
    npm test
    ```
-4. Build for production:
+Build for production:
    ```bash
    npm run build
-   ```
-5. Start the server:
-   ```bash
-   npm start
    ```
 
 ---
