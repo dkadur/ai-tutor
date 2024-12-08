@@ -2,12 +2,6 @@
 
 Wolfie Tutor is an innovative project designed to assist students in their SAT Math preparation. This repository contains the source code for the project, providing features like Similar Question generation and Question Breakdown to enhance learning.
 
-## Original Source
-
-This project was originally developed as part of a coursework submission at Stony Brook University. The repository is available on GitHub:
-
-- [Original Repository URL](https://github.com/dkadur/ai-tutor)
-
 ## Modified Files
 
 The following files have been modified or created for the project inside of the apps/next folder:
