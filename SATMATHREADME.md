@@ -18,7 +18,7 @@ The following files have been modified or created for the project inside the `ap
 
 ---
 
-## 🛠️ Training and Testing
+## 🛠️ Testing
 
 Follow these steps to train and test the system:
 
