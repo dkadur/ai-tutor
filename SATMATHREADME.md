@@ -42,11 +42,9 @@ TypeScript >= 4.5.0
 Prisma >= 4.0.0
 Database: PostgreSQL >= 13.0.0
 AI SDKs:
-
-OpenAI SDK
-Google Gemini API
-xAI API
-
+- OpenAI SDK
+- Google Gemini API
+- xAI API
 
 ## Getting Started
 
