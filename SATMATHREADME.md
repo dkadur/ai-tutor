@@ -31,14 +31,6 @@ Follow these steps to train and test the system:
 
 ## Trained Models Used: This project primarily uses pretrained models like GPT-4o-mini, Gemini, and xAI Grok. No additional model training was conducted in this repository.
 
-Datasets Used: SAT Math section questions sourced from publicly available datasets.
-
-Links to Models and Data:
-
-OpenAI GPT-4o-mini
-Gemini AI
-xAI Grok
-
 Prompts are stored at: apps/next/components/ui/assistant-ui/thread.tsx
 
 ## Software Requirements
