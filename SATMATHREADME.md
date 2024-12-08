@@ -13,15 +13,10 @@ This project was originally developed as part of a coursework submission at Ston
 The following files have been modified or created for the project:
 
 - **app/**: Contains the main Next.js app logic.
-  - Key components added: `BreakdownComponent.tsx`, `SimilarQuestionComponent.tsx`.
 - **components/**: Modular React components used across the app.
-  - Modified: `QuestionCard.tsx` (to handle SAT Math questions dynamically).
 - **hooks/**: Custom hooks for state and API interactions.
-  - Added: `useQuestionContext.ts` (handles user interactions with AI tutor).
 - **server/**: Contains backend APIs for question generation and breakdown.
-  - Added: `questionService.ts` (main service for handling AI API calls).
 - **types/**: TypeScript types for better type safety.
-  - Modified: `QuestionType.ts` (extended for AI tutor-specific needs).
 - **middleware.ts**: Added custom middleware to handle API requests.
 
 ## Training and Testing Commands
