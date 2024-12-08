@@ -10,10 +10,10 @@ This project was originally developed as part of a coursework submission at Ston
 
 ## Modified Files
 
-The following files have been modified or created for the project:
+The following files have been modified or created for the project inside of the apps/next folder:
 
 - **app/**: Contains the main Next.js app logic.
-- **components/**: Modular React components used across the app.
+- **app/components/**: Modular React components used across the app.
 - **hooks/**: Custom hooks for state and API interactions.
 - **server/**: Contains backend APIs for question generation and breakdown.
 - **types/**: TypeScript types for better type safety.
@@ -68,13 +68,13 @@ Clone the repository:
 git clone https://github.com/dkadur/ai-tutor.git
 
 Navigate to the project directory:
-cd ai-tutor
+cd ai-tutor/next
 
 Install dependencies:
 npm install
 
 Start the development server:
-npm run dev
+npm run next
 
 Access the app in your browser:
 http://localhost:3000
